@@ -1,0 +1,14 @@
+<launch>
+
+  <!-- The drive_bot node with the parameters of maximum linear and angular velocity -->
+  <node name="drive_bot" pkg="ball_chaser" type="drive_bot" output="screen">
+    <rosparam>
+      max_linear_x: 1.0
+      max_angular_z: 1.0
+    </rosparam>
+  </node>
+
+  <!-- The image_process node -->
+  <node name="process_image" pkg="ball_chaser" type="process_image" output="screen"/>
+
+</launch>
