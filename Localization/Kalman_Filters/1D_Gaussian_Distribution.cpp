@@ -1,3 +1,9 @@
+/*
+Gaussian Distribution is a probability distribution, 
+which provides the probability of x being "x" in a normal distribution function 
+with a mean of /mu and variance of /sigma^2. Denoted as N(x: mu, sigma^2 )
+*/
+
 #include <iostream>
 #include <math.h>
 
