@@ -28,8 +28,7 @@ void get_current_velocity(const geometry_msgs::Twist speed) {
 
 void ball_searching() {
   float vel_x = 0.; // stop the robot
-  float rot_r = 0.5; // in the very rare scenario, the ball was at the center before being disapear.
-                    // then, set to the Initialize point.
+  float rot_r = .5; // keep rotating to search a ball
 
   // geometry_msgs::Twist speed;
   // ROS_INFO_STREAM(std::to_string(speed.angular.z));
@@ -57,7 +56,7 @@ void process_image_callback(const sensor_msgs::Image img)
 
     // Initialization
     bool ball_in_sight = false;
-    float vel_x, rot_r = .5; //1:left, -1:right
+    float vel_x, rot_r; //1:left, -1:right
 
     // Get image size
     /* sensor image data = [[255,255,255],[255,255,255],.....[255,255,255]]
