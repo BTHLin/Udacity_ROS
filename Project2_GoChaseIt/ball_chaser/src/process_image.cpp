@@ -21,19 +21,22 @@ void drive_robot(float lin_x, float ang_z)
     }
 }
 
-void ball_searching() {
-  ros::NodeHandle nh;
-  ros::Subscriber sub = nh.subscribe("/cmd_vel", 1, ball_searching);
-  ROS_INFO_STREAM("callback func works");
+void get_current_velocity(const geometry_msgs::Twist speed) {
+  // Please let me know if there is any way can pass "speed.angular.z" value into ball_searching function
+  ROS_INFO_STREAM("ang_z: "  +std::to_string(speed.angular.z));
+}
 
+void ball_searching() {
   float vel_x = 0.; // stop the robot
-  float rot_r = 0.5; // in the very rare scenario, the ball was at the center before disapeear.
+  float rot_r = 0.5; // in the very rare scenario, the ball was at the center before being disapear.
                     // then, set to the Initialize point.
 
-  // if (velocity.angular.z < 0.) {
+  // geometry_msgs::Twist speed;
+  // ROS_INFO_STREAM(std::to_string(speed.angular.z));
+  // if (speed.angular.z < 0.) {
   //   // it was yawing to right, continue the search on the right side
   //   rot_r = -1.;
-  // } else if (velocity.angular.z > 0.) {
+  // } else if (speed.angular.z > 0.) {
   //   // it was yawing to left, continue the search on the left side
   //   rot_r = 1.;
   // }
@@ -54,8 +57,7 @@ void process_image_callback(const sensor_msgs::Image img)
 
     // Initialization
     bool ball_in_sight = false;
-    float vel_x, rot_r; //1:left, -1:right
-    ros::NodeHandle nh; //create a new NodeHandle
+    float vel_x, rot_r = .5; //1:left, -1:right
 
     // Get image size
     /* sensor image data = [[255,255,255],[255,255,255],.....[255,255,255]]
@@ -75,19 +77,20 @@ void process_image_callback(const sensor_msgs::Image img)
         vel_x = .5;
         //dynamically change the robot rotation speed base on the location of the ball
         rot_r = (.5*img.step - idx%img.step)/img.step;
-        // if found ball, stop searching.
+
+        // if found ball, stop scouting the image.
         break;
       }
     }
 
-    // if not seeing ball, self rotate to find the ball
+    // if not seeing ball, self rotate until find the ball
     if (ball_in_sight==false) {
       ROS_INFO_STREAM("Ball not found! Searching...");
       ball_searching();
+    }else{
+      // send drive_bot commands
+      drive_robot(vel_x, rot_r);
     }
-
-    // send drive_bot commands
-    drive_robot(vel_x, rot_r);
 }
 
 
@@ -102,6 +105,8 @@ int main(int argc, char** argv)
 
     // Subscribe to /camera/rgb/image_raw topic to read the image data inside the process_image_callback function
     ros::Subscriber sub1 = n.subscribe("/camera/rgb/image_raw", 10, process_image_callback);
+    // Subscrube to /cmd_vel to read current angular velocity
+    ros::Subscriber sub2 = n.subscribe("/cmd_vel", 10, get_current_velocity);
 
     // Handle ROS communication events
     ros::spin();
