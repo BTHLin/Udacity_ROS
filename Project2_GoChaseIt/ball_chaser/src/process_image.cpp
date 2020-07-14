@@ -68,7 +68,7 @@ void process_image_callback(const sensor_msgs::Image img)
     // loop over entire image, increment by 3, since it has RGB three channels
     for (int idx = 0; idx < img_size; idx+=3) {
       // check if any pixel is full yellow -->  RGB = 255, 255, 0
-      if (img.data[idx]==255 && img.data[idx+1]==255 && img.data[idx+2]==0) {
+      if (img.data[idx]==255 && img.data[idx+1]==255 && img.data[idx+2]==255) {
         // found ball
         ROS_INFO_STREAM("Found a ball! Moving robot to the ball.");
         ball_in_sight = true;
