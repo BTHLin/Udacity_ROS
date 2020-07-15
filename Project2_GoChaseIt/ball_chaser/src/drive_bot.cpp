@@ -19,9 +19,6 @@ requested wheel velocities
    ball_chaser::DriveToTarget::Response& res){
 
      // Announce receiving requests
-     req.msg_feedback = "Received DriveToTarget Request" +
-                        "linear_x: %1.2f, angular_z: %1.2f", (float)req.linear_x, (float)req.angular_z;
-     ROS_INFO_STREAM(req.msg_feedback);
      ROS_INFO("Received DriveToTarget Request linear_x: %1.2f, angular_z: %1.2f",
               (float)req.linear_x, (float)req.angular_z);
 
